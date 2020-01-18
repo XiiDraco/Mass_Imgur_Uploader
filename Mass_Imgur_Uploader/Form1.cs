@@ -34,7 +34,7 @@ namespace Mass_Imgur_Uploader
                 webClient.Headers.Add("Authorization", "Client-ID dfa7e126c16a262");
                 String[] lines = richTextBox1.Text.Trim().Split('\n');
 
-                progressBar1.Maximum = lines.Length;
+                progressBar1.Maximum = lines.Length * 3;
                 progressBar1.Value = 0;
                 progressBar1.Step = 1;
 
@@ -50,14 +50,17 @@ namespace Mass_Imgur_Uploader
                                 { "image", Convert.ToBase64String(File.ReadAllBytes(s)) }
                             };
 
+                            progressBar1.PerformStep();
+
                             byte[] response = webClient.UploadValues("https://api.imgur.com/3/upload.xml", val);
+
+                            progressBar1.PerformStep();
 
                             XDocument doc = XDocument.Load(new MemoryStream(response));
                             richTextBox2.AppendText(doc.Root.Element("link").Value + "\n");
                         }
                         else
                         {
-                            value = 1.5f;
 
                             Bitmap img = convertImage(new Bitmap(s));
                             for (int y = 0; y < img.Height; y++)
@@ -83,6 +86,8 @@ namespace Mass_Imgur_Uploader
                                 imageBytes = str.ToArray();
                             }
 
+                            progressBar1.PerformStep();
+
                             NameValueCollection val = new NameValueCollection
                             {
                                 { "image", Convert.ToBase64String(imageBytes) }
@@ -93,6 +98,7 @@ namespace Mass_Imgur_Uploader
                             XDocument doc = XDocument.Load(new MemoryStream(response));
                             richTextBox2.AppendText(doc.Root.Element("link").Value + "\n");
 
+                            progressBar1.PerformStep();
                         }
 
 
