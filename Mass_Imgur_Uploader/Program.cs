@@ -12,7 +12,10 @@ namespace Mass_Imgur_Uploader
         static void Main(string[] args)
         {
             new Program();
+            System.Threading.Thread.Sleep(1);
         }
+
+        
 
         public Program()
         {
