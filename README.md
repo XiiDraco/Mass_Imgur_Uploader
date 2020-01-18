@@ -14,5 +14,8 @@ The program currently has limited functionality but includes the following:
 
 ![Example of program function.](https://i.imgur.com/VZHFfrO.jpg)
 
+# Download
+Unfortunately I can't really do much about Window's security complaining about it not being fully signed, yet, but the code is out in the open so it's pretty transparent. You can download it [here](https://github.com/XiiDraco/Mass_Imgur_Uploader/releases): 
+
 ## Why did I make this?
 I was watching the streamer Gladd while he was helping during the efforts of the corridors of time puzzle in Destiny 2. I made this to speed up the amount of time it took for him to copy and past data between the sheets, his screenshots, etcetera. It was almost painful to watch. :)
