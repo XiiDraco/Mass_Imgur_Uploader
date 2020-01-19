@@ -18,7 +18,8 @@ namespace Mass_Imgur_Uploader
 
     public partial class Form1 : Form
     {
-        Boolean inverted = false;
+
+        bool inverted = false;
         float value = 1.5f;
 
         public Form1()
@@ -29,91 +30,98 @@ namespace Mass_Imgur_Uploader
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.Headers.Add("Authorization", "Client-ID dfa7e126c16a262");
-                String[] lines = richTextBox1.Text.Trim().Split('\n');
-
-                progressBar1.Maximum = lines.Length * 3;
-                progressBar1.Value = 0;
-                progressBar1.Step = 1;
-
-                System.Diagnostics.Debug.WriteLine("Test");
-                foreach (String s in lines)
+            Thread uploadImages = new Thread(new ThreadStart(delegate {
+                using (WebClient webClient = new WebClient())
                 {
-                    try
+                    webClient.Headers.Add("Authorization", "Client-ID dfa7e126c16a262");
+                    String intake = null;
+                    richTextBox1.Invoke(new Action(() => intake = richTextBox1.Text));
+                    String[] lines = intake.Trim().Split('\n');
+
+                    progressBar1.Invoke(new Action(() => {
+                        progressBar1.Maximum = lines.Length * 3;
+                        progressBar1.Value = 0;
+                        progressBar1.Step = 1;
+                    }));
+                    
+                    System.Diagnostics.Debug.WriteLine("Test");
+                    foreach (String s in lines)
                     {
-                        if (!inverted)
+                        try
                         {
-                            NameValueCollection val = new NameValueCollection
+                            if (!inverted)
+                            {
+                                NameValueCollection val = new NameValueCollection
                             {
                                 { "image", Convert.ToBase64String(File.ReadAllBytes(s)) }
                             };
 
-                            progressBar1.PerformStep();
+                                progressBar1.Invoke(new Action(() => progressBar1.PerformStep()));
 
-                            byte[] response = webClient.UploadValues("https://api.imgur.com/3/upload.xml", val);
+                                byte[] response = webClient.UploadValues("https://api.imgur.com/3/upload.xml", val);
 
-                            progressBar1.PerformStep();
+                                progressBar1.Invoke(new Action(() => progressBar1.PerformStep()));
 
-                            XDocument doc = XDocument.Load(new MemoryStream(response));
-                            richTextBox2.AppendText(doc.Root.Element("link").Value + "\n");
-                        }
-                        else
-                        {
-
-                            Bitmap img = convertImage(new Bitmap(s));
-                            for (int y = 0; y < img.Height; y++)
+                                XDocument doc = XDocument.Load(new MemoryStream(response));
+                                richTextBox2.Invoke(new Action(() => richTextBox2.AppendText(doc.Root.Element("link").Value + "\n")));
+                            }
+                            else
                             {
-                                for (int x = 0; x < img.Width; x++)
+
+                                Bitmap img = convertImage(new Bitmap(s));
+                                for (int y = 0; y < img.Height; y++)
                                 {
-                                    Color pixel = img.GetPixel(x, y);
-                                    pixel = Color.FromArgb(255, Math.Min(255, (255 - pixel.R) + 50), Math.Min(255, (255 - pixel.G) + 50), Math.Min(255, (255 - pixel.B) + 50));
+                                    for (int x = 0; x < img.Width; x++)
+                                    {
+                                        Color pixel = img.GetPixel(x, y);
+                                        pixel = Color.FromArgb(255, Math.Min(255, (255 - pixel.R) + 50), Math.Min(255, (255 - pixel.G) + 50), Math.Min(255, (255 - pixel.B) + 50));
 
-                                    pixel = Color.FromArgb(255, (int)Math.Max(0, Math.Min(255, ((((pixel.R / 255f) - 0.5f) * value) + 0.5f) * 255f)),
-                                        (int)Math.Max(0, Math.Min(255, ((((pixel.G / 255f) - 0.5f) * value) + 0.5f) * 255f)),
-                                        (int)Math.Max(0, Math.Min(255, ((((pixel.B / 255f) - 0.5f) * value) + 0.5f) * 255f)));
+                                        pixel = Color.FromArgb(255, (int)Math.Max(0, Math.Min(255, ((((pixel.R / 255f) - 0.5f) * value) + 0.5f) * 255f)),
+                                            (int)Math.Max(0, Math.Min(255, ((((pixel.G / 255f) - 0.5f) * value) + 0.5f) * 255f)),
+                                            (int)Math.Max(0, Math.Min(255, ((((pixel.B / 255f) - 0.5f) * value) + 0.5f) * 255f)));
 
-                                    img.SetPixel(x, y, pixel);
+                                        img.SetPixel(x, y, pixel);
+                                    }
                                 }
-                            }
 
-                            byte[] imageBytes = null;
+                                byte[] imageBytes = null;
 
-                            using (MemoryStream str = new MemoryStream())
-                            {
-                                img.Save(str, System.Drawing.Imaging.ImageFormat.Png);
-                                imageBytes = str.ToArray();
-                            }
+                                using (MemoryStream str = new MemoryStream())
+                                {
+                                    img.Save(str, System.Drawing.Imaging.ImageFormat.Png);
+                                    imageBytes = str.ToArray();
+                                }
 
-                            progressBar1.PerformStep();
+                                progressBar1.Invoke(new Action(() => progressBar1.PerformStep()));
 
-                            NameValueCollection val = new NameValueCollection
+                                NameValueCollection val = new NameValueCollection
                             {
                                 { "image", Convert.ToBase64String(imageBytes) }
                             };
 
-                            byte[] response = webClient.UploadValues("https://api.imgur.com/3/upload.xml", val);
+                                byte[] response = webClient.UploadValues("https://api.imgur.com/3/upload.xml", val);
 
-                            XDocument doc = XDocument.Load(new MemoryStream(response));
-                            richTextBox2.AppendText(doc.Root.Element("link").Value + "\n");
+                                XDocument doc = XDocument.Load(new MemoryStream(response));
+                                richTextBox2.Invoke(new Action(() => richTextBox2.AppendText(doc.Root.Element("link").Value + "\n")));
 
-                            progressBar1.PerformStep();
+                                progressBar1.Invoke(new Action(() => progressBar1.PerformStep()));
+                            }
+
+
                         }
-
-
+                        catch (FileNotFoundException e2)
+                        {
+                            System.Windows.Forms.MessageBox.Show(s + " was not found.");
+                        }
+                        catch (Exception e3)
+                        {
+                            System.Diagnostics.Debug.WriteLine(e3.ToString());
+                        }
+                        progressBar1.Invoke(new Action(() => progressBar1.PerformStep()));
                     }
-                    catch (FileNotFoundException e2)
-                    {
-                        System.Windows.Forms.MessageBox.Show(s + " was not found.");
-                    }
-                    catch (Exception e3)
-                    {
-                        System.Diagnostics.Debug.WriteLine(e3.ToString());
-                    }
-                    progressBar1.PerformStep();
                 }
-            }
+            }));
+            uploadImages.Start();
         }
 
         public Bitmap convertImage(Image src)
@@ -179,7 +187,22 @@ namespace Mass_Imgur_Uploader
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            value = (float)numericUpDown1.Value;
+            value = ((float)(numericUpDown1.Value) / 100f);
+        }
+
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox2_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.LinkText);
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

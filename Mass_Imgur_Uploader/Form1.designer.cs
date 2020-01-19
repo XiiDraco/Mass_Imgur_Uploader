@@ -95,6 +95,8 @@
             this.richTextBox2.TabIndex = 4;
             this.richTextBox2.Text = "";
             this.richTextBox2.WordWrap = false;
+            this.richTextBox2.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox2_LinkClicked);
+            this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
             // 
             // label1
             // 
@@ -126,7 +128,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(15, 282);
+            this.checkBox1.Location = new System.Drawing.Point(15, 283);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(107, 17);
             this.checkBox1.TabIndex = 8;
@@ -136,36 +138,31 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDown1.Location = new System.Drawing.Point(305, 282);
+            this.numericUpDown1.Location = new System.Drawing.Point(374, 282);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            2,
+            200,
             0,
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(51, 20);
             this.numericUpDown1.TabIndex = 9;
             this.numericUpDown1.Value = new decimal(new int[] {
-            15,
+            150,
             0,
             0,
-            65536});
+            0});
             this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(212, 284);
+            this.label3.Location = new System.Drawing.Point(267, 284);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.Size = new System.Drawing.Size(101, 13);
             this.label3.TabIndex = 10;
-            this.label3.Text = "Contrast of invert:";
+            this.label3.Text = "% Contrast of invert:";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // Form1
             // 
