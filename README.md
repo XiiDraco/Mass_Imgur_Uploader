@@ -12,7 +12,7 @@ The program currently has limited functionality but includes the following:
 * Inversion of image
 * Adjustable contrast of inverted image
 
-![Example of program function.](https://i.imgur.com/VZHFfrO.jpg)
+![Example of program function.](https://i.imgur.com/Dym9rrd.jpg)
 
 # Download
 Unfortunately I can't really do much about Window's security complaining about it not being fully signed, yet, but the code is out in the open so it's pretty transparent. You can download it [here](https://github.com/XiiDraco/Mass_Imgur_Uploader/releases): 
